@@ -50,7 +50,7 @@ int main(void){
     double maxProfit = 0 ; 
 
     for(const auto& item:items){
-        if (capacity==0) return ; 
+        if (capacity==0) return 0  ; 
 
         if(item.weight<capacity){
             maxProfit += item.profit;
