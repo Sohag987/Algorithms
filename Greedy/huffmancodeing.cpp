@@ -95,4 +95,82 @@ string decode(Node *root,string encoded){
 
 }
 
+int main(){
+
+    // At first  i need to build a huffman tree 
+    // -> taking input  for string --> using get line 
+    string msg ;
+    cout<<"Enter your message"<<endl; 
+
+    getline(cin,msg); 
+    
+    // creating a for calculating frequency
+    unordered_map<char,int>frequency; 
+
+    for(char ch: msg){
+        frequency[ch]++; 
+
+    }
+
+    priority_queue<Node*,vector<Node*>,Compare>min_heap; 
+
+    for (auto& pair:frequency){
+        min_heap.push(new Node(pair.first,pair.second)); 
+    }
+
+    // Frequency building associated with chharacter is done ... it is time to build the huuffman tree #pragma endregion
+
+    while(min_heap.size()>1){
+        Node* left = min_heap.top(); 
+        min_heap.pop();
+        
+        Node* right = min_heap.top();
+        min_heap.pop(); 
+
+        Node* parent = new Node('\0',left->freq+right->freq); 
+
+        parent->left = left ; 
+        parent->right = right; 
+
+        min_heap.push(parent);
+    }
+
+    Node *root = min_heap.top() ; 
+
+    // Generating huffman coding 
+    unordered_map<char,string>huffman_code; 
+
+    generateCodes(root,"",huffman_code); 
+
+
+    cout<<"Original Message:"<<msg<<endl;
+
+    cout<<"\nHuffman code:\n";
+
+    for(const auto& pair:huffman_code){
+        if(pair.first == ' '){
+            cout<<"[space]"; 
+        }
+        else{
+            cout<<pair.first<<" ->"<<pair.second<<endl; 
+        }
+    }
+     
+
+    // encoded msg 
+    string encodedmsg = "" ;
+    
+    for (char ch :msg){
+        encodedmsg += huffman_code[ch]; 
+
+    }
+
+    cout<<"Encoded Msg"<<encodedmsg<<endl; 
+    string decoded  = decode(root,encodedmsg); 
+    cout<<"Decoded msg : "<<decoded<<endl; 
+
+
+    return 0 ; 
+}
+
 
